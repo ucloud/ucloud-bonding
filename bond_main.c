@@ -117,6 +117,7 @@ static struct bond_params bonding_defaults;
 static int resend_igmp = BOND_DEFAULT_RESEND_IGMP;
 static int packets_per_slave = 1;
 static int lp_interval = BOND_ALB_DEFAULT_LP_INTERVAL;
+static int arp_broadcast_mode = 0;
 
 module_param(max_bonds, int, 0);
 MODULE_PARM_DESC(max_bonds, "Max number of bonded devices");
@@ -197,6 +198,8 @@ module_param(lp_interval, uint, 0);
 MODULE_PARM_DESC(lp_interval, "The number of seconds between instances where "
 			      "the bonding driver sends learning packets to "
 			      "each slaves peer switch. The default is 1.");
+module_param(arp_broadcast_mode, uint, 0644);
+MODULE_PARM_DESC(arp_broadcast_mode, "broadcast arp packet to all slave");
 
 /*----------------------------- Global variables ----------------------------*/
 
@@ -5112,6 +5115,8 @@ static netdev_tx_t bond_tls_device_xmit(struct bonding *bond, struct sk_buff *sk
 static netdev_tx_t __bond_start_xmit(struct sk_buff *skb, struct net_device *dev)
 {
 	struct bonding *bond = netdev_priv(dev);
+	int arp_broadcast = arp_broadcast_mode &&
+	                    vlan_get_protocol(skb) == __cpu_to_be16(ETH_P_ARP);
 
 	if (bond_should_override_tx_queue(bond) &&
 	    !bond_slave_override(bond, skb))
@@ -5122,7 +5127,7 @@ static netdev_tx_t __bond_start_xmit(struct sk_buff *skb, struct net_device *dev
 		return bond_tls_device_xmit(bond, skb, dev);
 #endif
 
-	switch (BOND_MODE(bond)) {
+	switch (arp_broadcast ? BOND_MODE_BROADCAST : BOND_MODE(bond)) {
 	case BOND_MODE_ROUNDROBIN:
 		return bond_xmit_roundrobin(skb, dev);
 	case BOND_MODE_ACTIVEBACKUP:
