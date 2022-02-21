@@ -4258,11 +4258,48 @@ static u16 bond_select_queue(struct net_device *dev, struct sk_buff *skb,
 	return txq;
 }
 
+static bool is_ipv6_nd(const struct sk_buff *skb)
+{
+	const struct ipv6hdr *iph = ipv6_hdr(skb);
+	bool rc = false;
+
+	if (iph->nexthdr == NEXTHDR_ICMP) {
+		const struct icmp6hdr *icmph;
+		struct icmp6hdr _icmph;
+
+		icmph = __skb_header_pointer(skb, skb_transport_offset(skb),
+					     sizeof(_icmph), skb->data,
+					     skb_headlen(skb), &_icmph);
+		if (!icmph)
+			goto out;
+
+		switch (icmph->icmp6_type) {
+		case NDISC_ROUTER_SOLICITATION:
+		case NDISC_ROUTER_ADVERTISEMENT:
+		case NDISC_NEIGHBOUR_SOLICITATION:
+		case NDISC_NEIGHBOUR_ADVERTISEMENT:
+		case NDISC_REDIRECT:
+			rc = true;
+			break;
+		}
+	}
+
+out:
+	return rc;
+}
+
 static netdev_tx_t __bond_start_xmit(struct sk_buff *skb, struct net_device *dev)
 {
 	struct bonding *bond = netdev_priv(dev);
-	int arp_broadcast = arp_broadcast_mode &&
-	                    vlan_get_protocol(skb) == __cpu_to_be16(ETH_P_ARP);
+	int arp_broadcast = 0;
+
+	if (arp_broadcast_mode) {
+		__be16 proto = vlan_get_protocol(skb);
+
+		arp_broadcast = (proto == __cpu_to_be16(ETH_P_ARP)) ||
+				 ((proto == __cpu_to_be16(ETH_P_IPV6)) &&
+				  is_ipv6_nd(skb));
+	}
 
 	if (bond_should_override_tx_queue(bond) &&
 	    !bond_slave_override(bond, skb))
