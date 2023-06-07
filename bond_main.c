@@ -77,9 +77,9 @@
 #include <net/pkt_sched.h>
 #include <linux/rculist.h>
 #include <net/flow_dissector.h>
-#include <net/bonding.h>
-#include <net/bond_3ad.h>
-#include <net/bond_alb.h>
+#include "net/bonding.h"
+#include "net/bond_3ad.h"
+#include "net/bond_alb.h"
 
 #include "bonding_priv.h"
 

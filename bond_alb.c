@@ -21,8 +21,8 @@
 #include <net/arp.h>
 #include <net/ipv6.h>
 #include <asm/byteorder.h>
-#include <net/bonding.h>
-#include <net/bond_alb.h>
+#include "net/bonding.h"
+#include "net/bond_alb.h"
 
 static const u8 mac_v6_allmcast[ETH_ALEN + 2] __long_aligned = {
 	0x33, 0x33, 0x00, 0x00, 0x00, 0x01

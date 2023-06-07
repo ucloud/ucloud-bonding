@@ -14,7 +14,7 @@
 #include <linux/inet.h>
 #include <linux/sched/signal.h>
 
-#include <net/bonding.h>
+#include "net/bonding.h"
 
 static int bond_option_active_slave_set(struct bonding *bond,
 					const struct bond_opt_value *newval);
