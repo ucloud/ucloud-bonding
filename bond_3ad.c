@@ -12,8 +12,8 @@
 #include <linux/if_bonding.h>
 #include <linux/pkt_sched.h>
 #include <net/net_namespace.h>
-#include <net/bonding.h>
-#include <net/bond_3ad.h>
+#include "net/bonding.h"
+#include "net/bond_3ad.h"
 #include <net/netlink.h>
 
 /* General definitions */

@@ -4,7 +4,7 @@
 #include <linux/export.h>
 #include <net/net_namespace.h>
 #include <net/netns/generic.h>
-#include <net/bonding.h>
+#include "net/bonding.h"
 
 #include "bonding_priv.h"
 

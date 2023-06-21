@@ -24,11 +24,11 @@
 #include <linux/inetdevice.h>
 #include <linux/etherdevice.h>
 #include <linux/reciprocal_div.h>
-#include <linux/if_link.h>
+#include "../linux/if_link.h"
 
-#include <net/bond_3ad.h>
-#include <net/bond_alb.h>
-#include <net/bond_options.h>
+#include "bond_3ad.h"
+#include "bond_alb.h"
+#include "bond_options.h"
 
 #define BOND_MAX_ARP_TARGETS	16
 

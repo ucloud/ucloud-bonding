@@ -80,9 +80,9 @@
 #include <linux/rculist.h>
 #include <net/flow_dissector.h>
 #include <net/xfrm.h>
-#include <net/bonding.h>
-#include <net/bond_3ad.h>
-#include <net/bond_alb.h>
+#include "net/bonding.h"
+#include "net/bond_3ad.h"
+#include "net/bond_alb.h"
 #if IS_ENABLED(CONFIG_TLS_DEVICE)
 #include <net/tls.h>
 #endif

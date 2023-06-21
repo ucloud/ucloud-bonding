@@ -24,7 +24,7 @@
 #include <net/netns/generic.h>
 #include <linux/nsproxy.h>
 
-#include <net/bonding.h>
+#include "net/bonding.h"
 
 #define to_bond(cd)	((struct bonding *)(netdev_priv(to_net_dev(cd))))
 
