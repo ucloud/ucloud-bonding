@@ -8,31 +8,38 @@ This is for No-Stack architecture.
 
 ### Requirements
 
-1. This is for kernel 5.4
-2. Install kernel-devel, kernel-headers related kernel development packages which match the running kernel
-3. Install gcc(newer gcc for centos7) and make
+1. This is for kernel 5.15 and ubuntu
 
 ### Usage
 
 1. Compile and Install the module
 
 ```bash
-./install.sh
+sudo apt update
+sudo apt install -y gcc make
+git clone https://github.com/ucloud/ucloud-bonding -b v5.15
+cd ucloud-bonding
+sudo ln -sf  `pwd`  /usr/src/ucloud-bonding-1.0.0
+sudo dkms add -m ucloud-bonding -v 1.0.0
+sudo dkms install -m ucloud-bonding -v 1.0.0
 ```
 
 
 2. Uninstall the module
 
 ```bash
-./uninstall.sh
+sudo dkms uninstall -m ucloud-bonding -v 1.0.0
+sudo dkms remove ucloud-bonding/1.0.0 --all
 ```
 
 
-3. Enable the arp broadcast
+3. Enable the arp broadcast(configure bonding in netcfg first)
 
-   * configure the bonding normally
-
-   * add `echo 1 > /sys/module/bonding/parameters/arp_broadcast_mode` in /etc/rc.local
+```bash
+sudo install -m0644 ucloud-bonding-settings.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable ucloud-bonding-settings
+```
 
 ## Distribution license
 
