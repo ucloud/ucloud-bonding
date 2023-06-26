@@ -1,0 +1,13 @@
+[Unit]
+Description=ucloud-bonding settings service
+After=network-online.target
+Wants=network-online.target
+ConditionDirectoryNotEmpty=|/sys/module/bonding
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c "echo 1 > /sys/module/bonding/parameters/arp_broadcast_mode"
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
